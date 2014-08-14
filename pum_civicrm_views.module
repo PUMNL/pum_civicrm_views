@@ -1,0 +1,13 @@
+<?php
+
+function pum_civicrm_views_views_api() {
+  return array('api' => 3.0);
+}
+
+function pum_civicrm_views_enable() {
+    db_update('system')
+    ->fields(array('weight' => 1000))
+    ->condition('type', 'module')
+    ->condition('name', 'pum_civicrm_views')
+    ->execute();
+}

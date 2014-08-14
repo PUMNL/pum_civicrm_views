@@ -1,0 +1,6 @@
+name = PUM civicrm views integration
+description = Functionality to integrate civicrm with views a step further for PUM.
+core = 7.x
+package = PUM
+dependencies[] = civicrm (>=4.4)
+dependencies[] = views
