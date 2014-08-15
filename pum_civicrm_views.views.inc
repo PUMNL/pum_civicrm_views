@@ -1,7 +1,24 @@
 <?php
 
 function pum_civicrm_views_views_data_alter(&$data) {
-  
+  _pum_civicrm_views_relationship_country($data);
+  _pum_civicrm_views_relationship_case_activity_by_activity_type($data);  
+}
+
+/**
+ * Add a option of activity type to the case activity relationship
+ */
+function _pum_civicrm_views_relationship_case_activity_by_activity_type(&$data) {
+  $data['civicrm_case_activity']['activity_id']['relationship']['handler'] = 'case_activity_handler_relationship';
+}
+
+/**
+ * Add view relation between CiviCRM Address and Contact
+ * Between CiviCRM Address and Custom field civicrm_country_id of a country contact
+ * and vice versa
+ */
+
+function _pum_civicrm_views_relationship_country(&$data) {
   $pumCountry = civicrm_api3('CustomGroup', 'getsingle', array('name' => 'pumCountry'));
   $pumCountryField = civicrm_api3('CustomField', 'getsingle', array('custom_group_id' => $pumCountry['id'], 'name' => 'civicrm_country_id'));
   $pumCountryTable = $pumCountry['table_name'];
@@ -33,5 +50,4 @@ function pum_civicrm_views_views_data_alter(&$data) {
   $data['civicrm_address']['contact_id']['relationship']['handler'] = 'views_handler_relationship';
   $data['civicrm_address']['contact_id']['relationship']['label'] = t('Related address');
   $data['civicrm_address']['contact_id']['relationship']['title'] = t('Contact ID');
-  
 }

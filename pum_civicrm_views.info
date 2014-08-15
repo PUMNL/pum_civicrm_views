@@ -6,3 +6,4 @@ dependencies[] = civicrm (>=4.4)
 dependencies[] = views
 
 files[] = handlers/primary_address_handler_relationship.inc
+files[] = handlers/case_activity_handler_relationship.inc
