@@ -2,14 +2,6 @@
 
 function pum_civicrm_views_views_data_alter(&$data) {
   _pum_civicrm_views_relationship_country($data);
-  _pum_civicrm_views_relationship_case_activity_by_activity_type($data);  
-}
-
-/**
- * Add a option of activity type to the case activity relationship
- */
-function _pum_civicrm_views_relationship_case_activity_by_activity_type(&$data) {
-  $data['civicrm_case_activity']['activity_id']['relationship']['handler'] = 'case_activity_handler_relationship';
 }
 
 /**
