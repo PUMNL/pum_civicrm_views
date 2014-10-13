@@ -2,6 +2,25 @@
 
 function pum_civicrm_views_views_data_alter(&$data) {
   _pum_civicrm_views_relationship_country($data);
+  _pum_civicrm_views_relationship_relationship_by_case($data);
+}
+
+/**
+ * Add a view relationship for civicrm relationship starting from a case
+ */
+function _pum_civicrm_views_relationship_relationship_by_case(&$data) {
+  $data['civicrm_case']['relationship_id'] = array(
+  'real field' => 'id',
+    'title' => t('CiviCRM Relationship (starting from contact case ID)'),
+    'help' => t('Connects a case to a relationship.'),
+    'relationship' => array(
+      'base' => 'civicrm_relationship',
+      'base field' => 'case_id',
+      'handler' => 'civicrm_handler_relationship_relationship',
+      'label' => t('CiviCRM Relationship (starting from case ID)'),
+    ),
+  );  
+  
 }
 
 /**
