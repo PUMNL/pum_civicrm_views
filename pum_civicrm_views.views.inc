@@ -3,6 +3,7 @@
 function pum_civicrm_views_views_data_alter(&$data) {
   _pum_civicrm_views_relationship_country($data);
   _pum_civicrm_views_relationship_relationship_by_case($data);
+  _pum_civicrm_views_parent_case($data);
 }
 
 /**
@@ -61,4 +62,69 @@ function _pum_civicrm_views_relationship_country(&$data) {
   $data['civicrm_address']['contact_id']['relationship']['handler'] = 'views_handler_relationship';
   $data['civicrm_address']['contact_id']['relationship']['label'] = t('Related address');
   $data['civicrm_address']['contact_id']['relationship']['title'] = t('Contact ID');
+}
+
+function _pum_civicrm_views_parent_case(&$data) {
+  $link_case_to = civicrm_api3('CustomGroup', 'getsingle', array('name' => 'travel_parent'));
+  $case_id = civicrm_api3('CustomField', 'getsingle', array('name' => 'case_id', 'custom_group_id' => $link_case_to['id']));
+
+  $table = $link_case_to['table_name'];
+  $field = $case_id['column_name'];
+
+  $data[$table]['table']['group'] = t('CiviCRM Parent case');
+  $data[$table]['table']['base'] = array(
+    'field' => 'id', // This is the identifier field for the view.
+    'title' => t('CiviCRM Parent case'),
+    'help' => t('CiviCRM Parent case'),
+    'weight' => -10,
+  );
+
+  $data[$table]['table']['join']['entity_id'] = array(
+    'left_table' => 'civicrm_case',
+    'left_field' => 'id',
+    'field' => 'entity_id',
+  );
+
+  $data[$table]['table']['join'][$field] = array(
+    'left_table' => 'civicrm_case',
+    'left_field' => 'id',
+    'field' => $field,
+  );
+
+  $data[$table]['entity_id'] = array(
+    'title' => t('Child case'),
+    'relationship' => array(
+      'base' => 'civicrm_case',
+      'left_field' => 'id',
+      'field' => 'entity_id',
+      'handler' => 'views_handler_relationship',
+      'label' => t('CiviCRM Case (child)'),
+    ),
+  );
+
+  $data[$table][$field] = array(
+    'title' => t('Parent case'),
+    'relationship' => array(
+      'base' => 'civicrm_case',
+      'left_field' => 'id',
+      'field' => $field,
+      'handler' => 'views_handler_relationship',
+      'label' => t('CiviCRM Case (parent)'),
+    ),
+  );
+
+  /*
+  //relationship from address to ccountry entry
+  $data['civicrm_address']['country_id']['relationship']['base'] = $pumCountryTable;
+  $data['civicrm_address']['country_id']['relationship']['base field'] = $pumCountryFieldName;
+  $data['civicrm_address']['country_id']['relationship']['handler'] = 'pum_civicrm_views_primary_address_handler_relationship';
+  $data['civicrm_address']['country_id']['relationship']['label'] = t('country_entry');
+  $data['civicrm_address']['country_id']['relationship']['title'] = t('Country entry');
+
+  //relationship from address to contact
+  $data['civicrm_address']['contact_id']['relationship']['base'] = 'civicrm_contact';
+  $data['civicrm_address']['contact_id']['relationship']['base field'] = 'id';
+  $data['civicrm_address']['contact_id']['relationship']['handler'] = 'views_handler_relationship';
+  $data['civicrm_address']['contact_id']['relationship']['label'] = t('Related address');
+  $data['civicrm_address']['contact_id']['relationship']['title'] = t('Contact ID');*/
 }
