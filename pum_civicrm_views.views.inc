@@ -1,5 +1,11 @@
 <?php
 
+function pum_civicrm_views_views_data() {
+  $data = array();
+  _pum_civicrm_views_projects($data);
+  return $data;
+}
+
 function pum_civicrm_views_views_data_alter(&$data) {
   _pum_civicrm_views_relationship_country($data);
   _pum_civicrm_views_relationship_relationship_by_case($data);
@@ -29,7 +35,6 @@ function _pum_civicrm_views_relationship_relationship_by_case(&$data) {
  * Between CiviCRM Address and Custom field civicrm_country_id of a country contact
  * and vice versa
  */
-
 function _pum_civicrm_views_relationship_country(&$data) {
   $pumCountry = civicrm_api3('CustomGroup', 'getsingle', array('name' => 'pumCountry'));
   $pumCountryField = civicrm_api3('CustomField', 'getsingle', array('custom_group_id' => $pumCountry['id'], 'name' => 'civicrm_country_id'));
@@ -64,6 +69,9 @@ function _pum_civicrm_views_relationship_country(&$data) {
   $data['civicrm_address']['contact_id']['relationship']['title'] = t('Contact ID');
 }
 
+/**
+ * Add relationship between cases through the parent case custom field set
+ */
 function _pum_civicrm_views_parent_case(&$data) {
   $link_case_to = civicrm_api3('CustomGroup', 'getsingle', array('name' => 'travel_parent'));
   $case_id = civicrm_api3('CustomField', 'getsingle', array('name' => 'case_id', 'custom_group_id' => $link_case_to['id']));
@@ -112,19 +120,267 @@ function _pum_civicrm_views_parent_case(&$data) {
       'label' => t('CiviCRM Case (parent)'),
     ),
   );
+}
 
-  /*
-  //relationship from address to ccountry entry
-  $data['civicrm_address']['country_id']['relationship']['base'] = $pumCountryTable;
-  $data['civicrm_address']['country_id']['relationship']['base field'] = $pumCountryFieldName;
-  $data['civicrm_address']['country_id']['relationship']['handler'] = 'pum_civicrm_views_primary_address_handler_relationship';
-  $data['civicrm_address']['country_id']['relationship']['label'] = t('country_entry');
-  $data['civicrm_address']['country_id']['relationship']['title'] = t('Country entry');
+/**
+ * Add the threepeas projects to the view
+ */
+function _pum_civicrm_views_projects(&$data) {
+  $data['civicrm_project']['table']['group'] = t('CiviCRM Project');
+  $data['civicrm_project']['table']['base'] = array(
+    'field' => 'id', // This is the identifier field for the view.
+    'title' => t('CiviCRM Project'),
+    'help' => t('CiviCRM Project'),
+    'weight' => -10,
+  );
 
-  //relationship from address to contact
-  $data['civicrm_address']['contact_id']['relationship']['base'] = 'civicrm_contact';
-  $data['civicrm_address']['contact_id']['relationship']['base field'] = 'id';
-  $data['civicrm_address']['contact_id']['relationship']['handler'] = 'views_handler_relationship';
-  $data['civicrm_address']['contact_id']['relationship']['label'] = t('Related address');
-  $data['civicrm_address']['contact_id']['relationship']['title'] = t('Contact ID');*/
+  $data['civicrm_project']['table']['join']['customer_id'] = array(
+    'left_table' => 'civicrm_contact',
+    'left_field' => 'id',
+    'field' => 'customer_id',
+  );
+  $data['civicrm_project']['table']['join']['id'] = array(
+    'left_table' => 'civicrm_case_project',
+    'left_field' => 'project_id',
+    'field' => 'id',
+  );
+
+  $data['civicrm_project']['id'] = array(
+    'title' => t('Project ID'),
+    'field' => array(
+      'handler' => 'views_handler_field_numeric',
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
+    ),
+  );
+
+  $data['civicrm_project']['title'] = array(
+    'title' => t('Title'),
+    'field' => array(
+      'handler' => 'views_handler_field',
+      'click sortable' => TRUE, // This is use by the table display plugin.
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
+    ),
+  );
+
+  $data['civicrm_project']['reason'] = array(
+    'title' => t('Reason'),
+    'field' => array(
+      'handler' => 'views_handler_field',
+      'click sortable' => TRUE, // This is use by the table display plugin.
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
+    ),
+  );
+
+  $data['civicrm_project']['work_description'] = array(
+    'title' => t('Work description'),
+    'field' => array(
+      'handler' => 'views_handler_field',
+      'click sortable' => TRUE, // This is use by the table display plugin.
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
+    ),
+  );
+
+  $data['civicrm_project']['qualifications'] = array(
+    'title' => t('Qualifications'),
+    'field' => array(
+      'handler' => 'views_handler_field',
+      'click sortable' => TRUE, // This is use by the table display plugin.
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
+    ),
+  );
+
+  $data['civicrm_project']['expected_results'] = array(
+    'title' => t('Expected results'),
+    'field' => array(
+      'handler' => 'views_handler_field',
+      'click sortable' => TRUE, // This is use by the table display plugin.
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
+    ),
+  );
+
+  $data['civicrm_project']['project_plan'] = array(
+    'title' => t('Project plan'),
+    'field' => array(
+      'handler' => 'views_handler_field',
+      'click sortable' => TRUE, // This is use by the table display plugin.
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
+    ),
+  );
+
+  $data['civicrm_project']['customer_id'] = array(
+    'title' => t('Customer'),
+    'relationship' => array(
+      'base' => 'civicrm_contact',
+      'left_field' => 'id',
+      'field' => 'customer_id',
+      'handler' => 'views_handler_relationship',
+      'label' => t('CiviCRM Contact, with custom fields'),
+    ),
+  );
+
+  $data['civicrm_project']['start_date'] = array(
+    'title' => t('Start date'),
+    'field' => array(
+      'handler' => 'civicrm_handler_field_datetime',
+      'click sortable' => TRUE,
+    ),
+    'filter' => array(
+      'handler' => 'civicrm_handler_filter_datetime',
+      'is date' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'civicrm_handler_sort_date',
+    ),
+  );
+
+  $data['civicrm_project']['end_date'] = array(
+    'title' => t('End date'),
+    'field' => array(
+      'handler' => 'civicrm_handler_field_datetime',
+      'click sortable' => TRUE,
+    ),
+    'filter' => array(
+      'handler' => 'civicrm_handler_filter_datetime',
+      'is date' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'civicrm_handler_sort_date',
+    ),
+  );
+
+  $data['civicrm_project']['is_active'] = array(
+    'title' => t('Is active'),
+    'field' => array(
+      'handler' => 'views_handler_field_boolean',
+      'click sortable' => TRUE,
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_boolean_operator',
+      // This setting is used by the boolean filter handler, as possible option.
+      'type' => 'yes-no',
+      // use boolean_field = 1 instead of boolean_field <> 0 in WHERE statment.
+      'use equal' => true,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+  );
+
+  //case project table
+  $data['civicrm_case_project']['table']['group'] = t('CiviCRM Case Project');
+  $data['civicrm_case_project']['table']['base'] = array(
+    'field' => 'id', // This is the identifier field for the view.
+    'title' => t('CiviCRM Case Project'),
+    'help' => t('CiviCRM Case Project link table'),
+    'weight' => -10,
+  );
+
+  $data['civicrm_case_project']['table']['join']['project_id'] = array(
+    'left_table' => 'civicrm_project',
+    'left_field' => 'id',
+    'field' => 'project_id',
+  );
+  $data['civicrm_case_project']['table']['join']['case_id'] = array(
+    'left_table' => 'civicrm_case',
+    'left_field' => 'id',
+    'field' => 'case_id',
+  );
+
+  $data['civicrm_case_project']['project_id'] = array(
+    'title' => t('Project ID'),
+    'relationship' => array(
+      'base' => 'civicrm_project',
+      'left_field' => 'id',
+      'field' => 'project_id',
+      'handler' => 'views_handler_relationship',
+      'label' => t('CiviCRM Project'),
+    ),
+  );
+
+  $data['civicrm_case_project']['case_id'] = array(
+    'title' => t('Case ID'),
+    'relationship' => array(
+      'base' => 'civicrm_case',
+      'left_field' => 'id',
+      'field' => 'case_id',
+      'handler' => 'views_handler_relationship',
+      'label' => t('CiviCRM Case'),
+    ),
+  );
+
+  $data['civicrm_case_project']['is_active'] = array(
+    'title' => t('Is active'),
+    'field' => array(
+      'handler' => 'views_handler_field_boolean',
+      'click sortable' => TRUE,
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_boolean_operator',
+      // This setting is used by the boolean filter handler, as possible option.
+      'type' => 'yes-no',
+      // use boolean_field = 1 instead of boolean_field <> 0 in WHERE statment.
+      'use equal' => true,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+  );
+
 }
