@@ -247,7 +247,7 @@ function _pum_civicrm_views_projects(&$data) {
     ),
   );
 
-  $data['civicrm_project']['project_plan'] = array(
+  $data['civicrm_project']['projectplan'] = array(
     'title' => t('Project plan'),
     'field' => array(
       'handler' => 'views_handler_field',
