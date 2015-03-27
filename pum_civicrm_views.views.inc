@@ -1,15 +1,11 @@
 <?php
 
-function pum_civicrm_views_views_data() {
-  $data = array();
-  _pum_civicrm_views_projects($data);
-  return $data;
-}
-
 function pum_civicrm_views_views_data_alter(&$data) {
   _pum_civicrm_views_relationship_country($data);
   _pum_civicrm_views_relationship_relationship_by_case($data);
   _pum_civicrm_views_parent_case($data);
+  _pum_civicrm_views_projects($data);
+  _pum_civicrm_views_dsa_compose($data);
 }
 
 /**
@@ -121,6 +117,72 @@ function _pum_civicrm_views_parent_case(&$data) {
     ),
   );
 }
+
+
+/**
+ * Add the threepeas projects to the view
+ */
+function _pum_civicrm_views_dsa_compose(&$data) {
+  $data['civicrm_dsa_compose']['table']['group'] = t('CiviCRM DSA Compose');
+  $data['civicrm_dsa_compose']['table']['base'] = array(
+    'field' => 'id', // This is the identifier field for the view.
+    'title' => t('CiviCRM DSA Compose'),
+    'help' => t('CiviCRM DSA Compose'),
+    'weight' => -10,
+  );
+
+  $data['civicrm_dsa_compose']['table']['join']['civicrm_activity'] = array(
+    'left_table' => 'civicrm_activity',
+    'left_field' => 'id',
+    'field' => 'activity_id',
+  );
+
+  $data['civicrm_activity']['table']['join']['civicrm_dsa_compose'] = array(
+    'left_table' => 'civicrm_dsa_compose',
+    'left_field' => 'activity_id',
+    'field' => 'id',
+  );
+
+  $data['civicrm_dsa_compose']['id'] = array(
+    'title' => t('ID'),
+    'relationship' => array(
+      'base' => 'civicrm_activity',
+      'left_field' => 'id',
+      'field' => 'activity_id',
+      'handler' => 'views_handler_relationship',
+      'label' => t('CiviCRM DSA Compose'),
+    ),
+  );
+
+  $data['civicrm_dsa_compose']['activity_id'] = array(
+    'title' => t('Activity'),
+    'relationship' => array(
+      'base' => 'civicrm_activity',
+      'left_field' => 'id',
+      'field' => 'activity_id',
+      'handler' => 'views_handler_relationship',
+      'label' => t('CiviCRM Activity'),
+    ),
+  );
+
+  $data['civicrm_dsa_compose']['amount_dsa'] = array(
+    'title' => t('Amount DSA'),
+    'field' => array(
+      'handler' => 'civicrm_handler_field_money',
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
+    ),
+  );
+}
+
 
 /**
  * Add the threepeas projects to the view
