@@ -182,6 +182,12 @@ function _pum_civicrm_views_dsa_compose(&$data) {
       'handler' => 'views_handler_argument_numeric',
     ),
   );
+
+  //money handler to dsa field
+  $bdsa_cg = civicrm_api3('CustomGroup', 'getsingle', array('name' => 'pum_business_dsa'));
+  $bdsa_table = $bdsa_cg['table_name'];
+  $bdsa_amount_field = civicrm_api3('CustomField', 'getvalue', array('name' => 'bdsa_amount', 'return' => 'column_name', 'custom_group_id' => $bdsa_cg['id']));
+  $data[$bdsa_table][$bdsa_amount_field]['field']['handler'] = 'civicrm_handler_field_money';
 }
 
 
