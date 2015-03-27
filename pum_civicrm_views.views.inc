@@ -135,6 +135,7 @@ function _pum_civicrm_views_dsa_compose(&$data) {
     'left_table' => 'civicrm_activity',
     'left_field' => 'id',
     'field' => 'activity_id',
+    'handler' => 'pum_civicrm_handler_join_dsa_compose',
   );
 
   $data['civicrm_activity']['table']['join']['civicrm_dsa_compose'] = array(
