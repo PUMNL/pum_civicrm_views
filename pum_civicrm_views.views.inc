@@ -166,8 +166,178 @@ function _pum_civicrm_views_dsa_compose(&$data) {
     ),
   );
 
+  $data['civicrm_dsa_compose']['total_amount'] = array(
+    'title' => t('Total amount'),
+    'field' => array(
+      'handler' => 'pum_civicrm_handler_dsa_compose_total_amount',
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
+    ),
+  );
+
   $data['civicrm_dsa_compose']['amount_dsa'] = array(
     'title' => t('Amount DSA'),
+    'field' => array(
+      'handler' => 'civicrm_handler_field_money',
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
+    ),
+  );
+
+  $data['civicrm_dsa_compose']['amount_briefing'] = array(
+    'title' => t('Amount Briefing'),
+    'field' => array(
+      'handler' => 'civicrm_handler_field_money',
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
+    ),
+  );
+
+  $data['civicrm_dsa_compose']['amount_airport'] = array(
+    'title' => t('Amount Airport'),
+    'field' => array(
+      'handler' => 'civicrm_handler_field_money',
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
+    ),
+  );
+
+  $data['civicrm_dsa_compose']['amount_transfer'] = array(
+    'title' => t('Amount Transfer'),
+    'field' => array(
+      'handler' => 'civicrm_handler_field_money',
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
+    ),
+  );
+
+  $data['civicrm_dsa_compose']['amount_hotel'] = array(
+    'title' => t('Amount Hotel'),
+    'field' => array(
+      'handler' => 'civicrm_handler_field_money',
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
+    ),
+  );
+
+  $data['civicrm_dsa_compose']['amount_visa'] = array(
+    'title' => t('Amount Visa'),
+    'field' => array(
+      'handler' => 'civicrm_handler_field_money',
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
+    ),
+  );
+
+  $data['civicrm_dsa_compose']['amount_medical'] = array(
+    'title' => t('Amount Medical'),
+    'field' => array(
+      'handler' => 'civicrm_handler_field_money',
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
+    ),
+  );
+
+  $data['civicrm_dsa_compose']['amount_other'] = array(
+    'title' => t('Amount Other'),
+    'field' => array(
+      'handler' => 'civicrm_handler_field_money',
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
+    ),
+  );
+
+  $data['civicrm_dsa_compose']['description_other'] = array(
+    'title' => t('Description Other'),
+    'field' => array(
+      'handler' => 'views_handler_field',
+      'click sortable' => TRUE, // This is use by the table display plugin.
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
+    ),
+  );
+
+  $data['civicrm_dsa_compose']['amount_advance'] = array(
+    'title' => t('Amount Advance'),
     'field' => array(
       'handler' => 'civicrm_handler_field_money',
       'click sortable' => TRUE,
