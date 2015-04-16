@@ -378,6 +378,11 @@ function _pum_civicrm_views_projects(&$data) {
     'left_field' => 'id',
     'field' => 'customer_id',
   );
+  $data['civicrm_project']['table']['join']['civicrm_contact'] = array(
+    'left_table' => 'civicrm_contact',
+    'left_field' => 'id',
+    'field' => 'customer_id',
+  );
   $data['civicrm_project']['table']['join']['id'] = array(
     'left_table' => 'civicrm_case_project',
     'left_field' => 'project_id',
@@ -571,12 +576,22 @@ function _pum_civicrm_views_projects(&$data) {
     'weight' => -10,
   );
 
+  $data['civicrm_case_project']['table']['join']['civicrm_project'] = array(
+    'left_table' => 'civicrm_project',
+    'left_field' => 'id',
+    'field' => 'project_id',
+  );
   $data['civicrm_case_project']['table']['join']['project_id'] = array(
     'left_table' => 'civicrm_project',
     'left_field' => 'id',
     'field' => 'project_id',
   );
   $data['civicrm_case_project']['table']['join']['case_id'] = array(
+    'left_table' => 'civicrm_case',
+    'left_field' => 'id',
+    'field' => 'case_id',
+  );
+  $data['civicrm_case_project']['table']['join']['civicrm_case'] = array(
     'left_table' => 'civicrm_case',
     'left_field' => 'id',
     'field' => 'case_id',
