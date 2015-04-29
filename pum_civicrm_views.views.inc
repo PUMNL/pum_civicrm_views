@@ -6,6 +6,7 @@ function pum_civicrm_views_views_data_alter(&$data) {
   _pum_civicrm_views_parent_case($data);
   _pum_civicrm_views_projects($data);
   _pum_civicrm_views_dsa_compose($data);
+  _pum_civicrm_views_representative_compose($data);
 }
 
 /**
@@ -358,6 +359,105 @@ function _pum_civicrm_views_dsa_compose(&$data) {
   $bdsa_table = $bdsa_cg['table_name'];
   $bdsa_amount_field = civicrm_api3('CustomField', 'getvalue', array('name' => 'bdsa_amount', 'return' => 'column_name', 'custom_group_id' => $bdsa_cg['id']));
   $data[$bdsa_table][$bdsa_amount_field]['field']['handler'] = 'civicrm_handler_field_money';
+}
+
+/**
+ * Add the representative payment to drupal views
+ */
+function _pum_civicrm_views_representative_compose(&$data) {
+  $data['civicrm_representative_compose']['table']['group'] = t('CiviCRM Representative Compose');
+  $data['civicrm_representative_compose']['table']['base'] = array(
+    'field' => 'id', // This is the identifier field for the view.
+    'title' => t('CiviCRM Representative Compose'),
+    'help' => t('CiviCRM Representative Compose'),
+    'weight' => -10,
+  );
+
+  $data['civicrm_representative_compose']['table']['join']['civicrm_activity'] = array(
+    'left_table' => 'civicrm_activity',
+    'left_field' => 'id',
+    'field' => 'activity_id',
+    'handler' => 'pum_civicrm_handler_join_representative_compose',
+  );
+
+  $data['civicrm_representative_compose']['table']['join']['civicrm_contact'] = array(
+    'left_table' => 'civicrm_contact',
+    'left_field' => 'id',
+    'field' => 'contact_id',
+  );
+
+  $data['civicrm_activity']['table']['join']['civicrm_representative_compose'] = array(
+    'left_table' => 'civicrm_representative_compose',
+    'left_field' => 'activity_id',
+    'field' => 'id',
+  );
+
+  $data['civicrm_representative_compose']['id'] = array(
+    'title' => t('ID'),
+    'relationship' => array(
+      'base' => 'civicrm_activity',
+      'left_field' => 'id',
+      'field' => 'activity_id',
+      'handler' => 'views_handler_relationship',
+      'label' => t('CiviCRM Representative Compose'),
+    ),
+  );
+
+  $data['civicrm_representative_compose']['activity_id'] = array(
+    'title' => t('Activity'),
+    'relationship' => array(
+      'base' => 'civicrm_activity',
+      'left_field' => 'id',
+      'field' => 'activity_id',
+      'handler' => 'views_handler_relationship',
+      'label' => t('CiviCRM Activity'),
+    ),
+  );
+
+  $data['civicrm_representative_compose']['contact_id'] = array(
+    'title' => t('Contact'),
+    'relationship' => array(
+      'base' => 'civicrm_contact',
+      'left_field' => 'id',
+      'field' => 'contact_id',
+      'handler' => 'views_handler_relationship',
+      'label' => t('CiviCRM Contact'),
+    ),
+  );
+
+  $data['civicrm_representative_compose']['amount_rep'] = array(
+    'title' => t('Total amount'),
+    'field' => array(
+      'handler' => 'civicrm_handler_field_money',
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
+    ),
+  );
+
+  $data['civicrm_representative_compose']['comments'] = array(
+    'title' => t('Comments'),
+    'field' => array(
+      'handler' => 'views_handler_field',
+      'click sortable' => TRUE, // This is use by the table display plugin.
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
+    ),
+  );
 }
 
 
