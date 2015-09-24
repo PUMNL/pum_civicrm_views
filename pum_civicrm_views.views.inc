@@ -353,6 +353,23 @@ function _pum_civicrm_views_dsa_compose(&$data) {
       'handler' => 'views_handler_argument_numeric',
     ),
   );
+  
+  $data['civicrm_dsa_compose']['type'] = array(
+    'title' => t('Type'),
+    'field' => array(
+      'handler' => 'views_handler_field',
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
+    ),
+  );
 
   //money handler to dsa field
   $bdsa_cg = civicrm_api3('CustomGroup', 'getsingle', array('name' => 'pum_business_dsa'));
@@ -456,6 +473,23 @@ function _pum_civicrm_views_representative_compose(&$data) {
     ),
     'argument' => array(
       'handler' => 'views_handler_argument_string',
+    ),
+  );
+  
+  $data['civicrm_representative_compose']['type'] = array(
+    'title' => t('Type'),
+    'field' => array(
+      'handler' => 'views_handler_field',
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
     ),
   );
 }
