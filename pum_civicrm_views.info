@@ -9,3 +9,4 @@ files[] = handlers/primary_address_handler_relationship.inc
 files[] = handlers/pum_civicrm_handler_join_dsa_compose.inc
 files[] = handlers/pum_civicrm_handler_join_representative_compose.inc
 files[] = handlers/pum_civicrm_handler_dsa_compose_total_amount.inc
+files[] = handlers/pum_civicrm_handler_sort_case_status.inc

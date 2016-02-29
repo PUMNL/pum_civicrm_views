@@ -1,12 +1,143 @@
 <?php
 
 function pum_civicrm_views_views_data_alter(&$data) {
+  _pum_civicrm_views_option_group($data);
   _pum_civicrm_views_relationship_country($data);
   _pum_civicrm_views_relationship_relationship_by_case($data);
   _pum_civicrm_views_parent_case($data);
   _pum_civicrm_views_projects($data);
   _pum_civicrm_views_dsa_compose($data);
   _pum_civicrm_views_representative_compose($data);
+  _pum_civicrm_views_case($data);
+}
+
+/**
+ * Add a sorting handler for case status
+ */
+function _pum_civicrm_views_case(&$data) {
+  $data['civicrm_case']['status']['sort']['handler'] = 'pum_civicrm_handler_sort_case_status';
+}
+
+function _pum_civicrm_views_option_group(&$data) {
+  $data['civicrm_option_group']['table']['group'] = t('CiviCRM Option Group');
+  $data['civicrm_option_group']['table']['base'] = array(
+    'field' => 'id', // This is the identifier field for the view.
+    'title' => t('CiviCRM Option Group'),
+    'help' => t('CiviCRM Option Group'),
+    'weight' => -10,
+  );
+
+  $data['civicrm_option_group']['table']['join']['id'] = array(
+    'left_table' => 'civicrm_option_value',
+    'left_field' => 'option_group_id',
+    'field' => 'id',
+  );
+
+  $data['civicrm_option_group']['id'] = array(
+    'title' => t('Option Group ID'),
+    'field' => array(
+      'handler' => 'views_handler_field_numeric',
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
+    ),
+  );
+
+  $data['civicrm_option_group']['name'] = array(
+    'title' => t('Name'),
+    'field' => array(
+      'handler' => 'views_handler_field',
+      'click sortable' => TRUE, // This is use by the table display plugin.
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
+    ),
+  );
+
+  $data['civicrm_option_value']['table']['group'] = t('CiviCRM Option Value');
+  $data['civicrm_option_value']['table']['base'] = array(
+    'field' => 'id', // This is the identifier field for the view.
+    'title' => t('CiviCRM Option Value'),
+    'help' => t('CiviCRM Option Value'),
+    'weight' => -10,
+  );
+
+  $data['civicrm_option_value']['table']['join']['option_group_id'] = array(
+    'left_table' => 'civicrm_option_group',
+    'left_field' => 'id',
+    'field' => 'option_group_id',
+  );
+
+  $data['civicrm_option_value']['id'] = array(
+    'title' => t('Option Value ID'),
+    'field' => array(
+      'handler' => 'views_handler_field_numeric',
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
+    ),
+  );
+
+  $data['civicrm_option_value']['option_group_id'] = array(
+    'title' => t('Option group ID'),
+    'field' => array(
+      'handler' => 'views_handler_field_numeric',
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
+    ),
+    'relationship' => array(
+      'base' => 'civicrm_option_group',
+      'left_field' => 'id',
+      'field' => 'option_group_id',
+      'handler' => 'views_handler_relationship',
+      'label' => t('CiviCRM Option Group'),
+    ),
+  );
+
+  $data['civicrm_option_group']['value'] = array(
+    'title' => t('Value'),
+    'field' => array(
+      'handler' => 'views_handler_field',
+      'click sortable' => TRUE, // This is use by the table display plugin.
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
+    ),
+  );
 }
 
 /**
