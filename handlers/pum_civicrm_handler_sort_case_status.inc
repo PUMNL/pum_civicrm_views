@@ -50,6 +50,16 @@ class pum_civicrm_handler_sort_case_status extends views_handler_sort {
       $option_value_alias = $this->table_alias.'_case_status_option_value';
       $option_group_alias = $this->table_alias.'_case_status_option_group';
 
+      civicrm_initialize();
+      $case_status_option_group_id = civicrm_api3('OptionGroup', 'getvalue', array('return' => 'id', 'name' => 'case_status'));
+
+      /*$option_group_join = new views_join();
+      $option_group_join->table = 'civicrm_option_group';
+      $option_group_join->field = 'id';
+      //$option_group_join->left_table = 'civicrm_option_value';
+      //$option_group_join->left_field = 'option_group_id';
+      $option_group_join->type = 'LEFT';
+      $option_group_join->extra = array(array('field' => 'name', 'value' => 'case_status'));*/
 
       $option_value_join = new views_join();
       $option_value_join->table = 'civicrm_option_value';
@@ -57,17 +67,11 @@ class pum_civicrm_handler_sort_case_status extends views_handler_sort {
       $option_value_join->left_table = 'civicrm_case';
       $option_value_join->left_field = 'status_id';
       $option_value_join->type = 'LEFT';
+      $option_value_join->extra = array(array('field' => 'option_group_id', 'value' => $case_status_option_group_id));
 
-      $option_group_join = new views_join();
-      $option_group_join->table = 'civicrm_option_group';
-      $option_group_join->field = 'id';
-      $option_group_join->left_table = 'civicrm_option_value';
-      $option_group_join->left_field = 'option_group_id';
-      $option_group_join->type = 'LEFT';
-      $option_group_join->extra = array(array('field' => 'name', 'value' => 'case_status'));
 
+      //$this->query->add_relationship($option_group_alias, $option_group_join, 'civicrm_option_group', $option_value_alias);
       $this->query->add_relationship($option_value_alias, $option_value_join, 'civicrm_option_value', $this->table_alias);
-      $this->query->add_relationship($option_group_alias, $option_group_join, 'civicrm_option_group', $option_value_alias);
       $this->query->add_orderby($this->table_alias.'_case_status_option_value', 'weight', 'ASC');
     } else {
       parent::query();
