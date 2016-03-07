@@ -8,7 +8,6 @@ function pum_civicrm_views_views_data_alter(&$data) {
   _pum_civicrm_views_projects($data);
   _pum_civicrm_views_dsa_compose($data);
   _pum_civicrm_views_representative_compose($data);
-<<<<<<< HEAD
   _pum_civicrm_views_expert_mycases($data);
 }
 
@@ -17,7 +16,6 @@ function pum_civicrm_views_views_data_alter(&$data) {
  */
 function _pum_civicrm_views_expert_mycases(&$data) {
   $data['civicrm_contact']['relationship_id_b']['relationship']['handler'] = 'pum_civicrm_handler_join_multi_relationship';
-=======
   _pum_civicrm_views_case($data);
 }
 
@@ -148,7 +146,6 @@ function _pum_civicrm_views_option_group(&$data) {
       'handler' => 'views_handler_argument_string',
     ),
   );
->>>>>>> 499eec9aaf5851a603b8e39986c0550a8eba4782
 }
 
 /**
