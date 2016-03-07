@@ -7,6 +7,14 @@ function pum_civicrm_views_views_data_alter(&$data) {
   _pum_civicrm_views_projects($data);
   _pum_civicrm_views_dsa_compose($data);
   _pum_civicrm_views_representative_compose($data);
+  _pum_civicrm_views_expert_mycases($data);
+}
+
+/**
+ * Add a view relationship for civicrm relationship starting from a case
+ */
+function _pum_civicrm_views_expert_mycases(&$data) {
+  $data['civicrm_contact']['relationship_id_b']['relationship']['handler'] = 'pum_civicrm_handler_join_multi_relationship';
 }
 
 /**
