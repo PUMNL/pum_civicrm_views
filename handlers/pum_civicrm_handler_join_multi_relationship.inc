@@ -71,11 +71,15 @@ class pum_civicrm_handler_join_multi_relationship extends views_handler_relation
   function query() {
     parent::query();
     // Specify the type of relationships to join
+    $operator = 'IN';
+    if (!is_array($this->options['relationship_type'])) {
+      $operator = '=';
+    }
     $this->query->table_queue[$this->alias]['join']->extra[] = array(
       'value' => $this->options['relationship_type'],
       'numeric' => TRUE,
       'field' => 'relationship_type_id',
-      'operator' => 'IN',
+      'operator' => $operator,
     );
     // Specify the state of relationships to join
     if (isset($this->options['relationship_state']) && $this->options['relationship_state']) {
