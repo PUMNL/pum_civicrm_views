@@ -72,15 +72,17 @@ class pum_civicrm_handler_join_multi_relationship extends views_handler_relation
     parent::query();
     // Specify the type of relationships to join
     $operator = 'IN';
-    if (!is_array($this->options['relationship_type'])) {
+    if (!is_array($this->options['relationship_type']) || empty($this->options['relationship_type'])) {
       $operator = '=';
     }
-    $this->query->table_queue[$this->alias]['join']->extra[] = array(
-      'value' => $this->options['relationship_type'],
-      'numeric' => TRUE,
-      'field' => 'relationship_type_id',
-      'operator' => $operator,
-    );
+    if (!empty($this->options['relationship_type'])) {
+      $this->query->table_queue[$this->alias]['join']->extra[] = array(
+        'value' => $this->options['relationship_type'],
+        'numeric' => TRUE,
+        'field' => 'relationship_type_id',
+        'operator' => $operator,
+      );
+    }
     // Specify the state of relationships to join
     if (isset($this->options['relationship_state']) && $this->options['relationship_state']) {
       $this->query->table_queue[$this->alias]['join']->extra[] = array(
@@ -90,30 +92,5 @@ class pum_civicrm_handler_join_multi_relationship extends views_handler_relation
         'operator' => '=',
       );
     }
-  }
-  function pum_log_message($message, $title) {
-    $fileName = '/var/www/pum_acc/sites/default/files/civicrm/ConfigAndLog/hommel'.date('Ymdhis').'.log';
-    $log = fopen($fileName, 'w');
-    fputs($log, $title);
-    fputs($log, "\n");
-    foreach ($message as $message_key => $message_value) {
-      if (is_array($message_value)) {
-        fputs($log, 'message_key: '.$message_key.' with array message_value:');
-        fputs($log, "\n");
-        foreach ($message_value as $value_key => $value_value) {
-          if (is_array($value_value)) {
-            fputs($log, 'value_key: '.$value_key.' with value_value array: '.implode('; ', $value_value));
-            fputs($log, "\n");
-          } else {
-            fputs($log, 'value_key: '.$value_key.' with value_value: '.$value_value);
-            fputs($log, "\n");
-          }
-        }
-      } else {
-        fputs($log, 'message_key: '.$message_key.', message_value: '.$message_value);
-        fputs($log, "\n");
-      }
-    }
-    fclose($log);
   }
 }
