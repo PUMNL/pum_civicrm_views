@@ -35,7 +35,7 @@ function _pum_civicrm_views_case(&$data) {
  */
 function _pum_civicrm_views_custom_data_add_id(&$data) {
   // get all custom groups
-  $custom_groups = civicrm_api3('CustomGroup', 'get', array());
+  $custom_groups = civicrm_api3('CustomGroup', 'get', array('option.limit' => 99999));
   foreach($custom_groups['values'] as $custom_group) {
     $table = $custom_group['table_name'];
     if (isset($data[$table])) {
