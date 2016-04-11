@@ -9,6 +9,7 @@ function pum_civicrm_views_views_data_alter(&$data) {
   _pum_civicrm_views_dsa_compose($data);
   _pum_civicrm_views_representative_compose($data);
   _pum_civicrm_views_expert_mycases($data);
+  _pum_civicrm_views_custom_data_add_id($data);
 }
 
 /**
@@ -24,6 +25,38 @@ function _pum_civicrm_views_expert_mycases(&$data) {
  */
 function _pum_civicrm_views_case(&$data) {
   $data['civicrm_case']['status']['sort']['handler'] = 'pum_civicrm_handler_sort_case_status';
+}
+
+/**
+ * Add the ID field of a custom data set.
+ * 
+ * @param $data
+ * @throws \CiviCRM_API3_Exception
+ */
+function _pum_civicrm_views_custom_data_add_id(&$data) {
+  // get all custom groups
+  $custom_groups = civicrm_api3('CustomGroup', 'get', array());
+  foreach($custom_groups['values'] as $custom_group) {
+    $table = $custom_group['table_name'];
+    if (isset($data[$table])) {
+      $data[$table]['id'] = array(
+        'title' => t('ID'),
+        'field' => array(
+          'handler' => 'views_handler_field_numeric',
+          'click sortable' => TRUE,
+        ),
+        'sort' => array(
+          'handler' => 'views_handler_sort',
+        ),
+        'filter' => array(
+          'handler' => 'views_handler_filter_numeric',
+        ),
+        'argument' => array(
+          'handler' => 'views_handler_argument_numeric',
+        ),
+      );
+    }
+  }
 }
 
 function _pum_civicrm_views_option_group(&$data) {
