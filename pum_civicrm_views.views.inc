@@ -10,6 +10,15 @@ function pum_civicrm_views_views_data_alter(&$data) {
   _pum_civicrm_views_representative_compose($data);
   _pum_civicrm_views_expert_mycases($data);
   _pum_civicrm_views_custom_data_add_id($data);
+  _pum_civicrm_views_filter_contact_subtype($data);
+}
+
+/**
+ * Alter the filter handler for contact subtype because
+ * the default filter does not work well when a contact has multiple subtypes.
+ */
+function _pum_civicrm_views_filter_contact_subtype(&$data) {
+  $data['civicrm_contact']['contact_sub_type']['filter']['handler'] = 'pum_civicrm_handler_filter_contact_sub_type';
 }
 
 /**
