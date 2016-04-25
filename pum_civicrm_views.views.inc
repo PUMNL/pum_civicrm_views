@@ -383,7 +383,7 @@ function _pum_civicrm_views_dsa_compose(&$data) {
   );
 
   $data['civicrm_dsa_compose']['amount_briefing'] = array(
-    'title' => t('Amount Briefing'),
+    'title' => t('Amount Briefing / Debriefing'),
     'field' => array(
       'handler' => 'civicrm_handler_field_money',
       'click sortable' => TRUE,
