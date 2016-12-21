@@ -1,6 +1,7 @@
 name = PUM civicrm views integration
 description = Functionality to integrate civicrm with views a step further for PUM.
 core = 7.x
+version = "7.x-1.16"
 package = PUM
 dependencies[] = civicrm (>=4.4)
 dependencies[] = views
@@ -12,3 +13,4 @@ files[] = handlers/pum_civicrm_handler_join_representative_compose.inc
 files[] = handlers/pum_civicrm_handler_dsa_compose_total_amount.inc
 files[] = handlers/pum_civicrm_handler_join_multi_relationship.inc
 files[] = handlers/pum_civicrm_handler_sort_case_status.inc
+files[] = handlers/pum_civicrm_handler_filter_datetime.inc

@@ -11,6 +11,21 @@ function pum_civicrm_views_views_data_alter(&$data) {
   _pum_civicrm_views_expert_mycases($data);
   _pum_civicrm_views_custom_data_add_id($data);
   _pum_civicrm_views_filter_contact_subtype($data);
+  _pum_civicrm_views_filter_datetime($data);
+}
+
+/**
+ * Alter the fields with a datetime filter to use our date time filter
+ * @param $data
+ */
+function _pum_civicrm_views_filter_datetime(&$data) {
+  foreach($data as $tablename => $table) {
+    foreach($table as $fieldname => $field) {
+      if (isset($field['filter']) && isset($field['filter']['handler']) && $field['filter']['handler'] == 'civicrm_handler_filter_datetime') {
+        $data[$tablename][$fieldname]['filter']['handler'] = 'pum_civicrm_handler_filter_datetime';
+      }
+    }
+  }
 }
 
 /**
